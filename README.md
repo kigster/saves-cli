@@ -1,15 +1,13 @@
-# Saves::CLI
+# Saves CLI
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/saves/cli`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Saves CLI client, able to create, fetch, delete, find saves across sharded dataset.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'saves-cli'
+gem 'saves-cli', git: 'git@github.com:wanelo/saves-cli.git'
 ```
 
 And then execute:
@@ -18,11 +16,21 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install saves-cli
+    $ cd ~/workspace
+    $ git clone git@github.com:wanelo/saves-cli.git
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+Usage: saves-cli [options] [command [options]]
+
+    -v, --[no-]verbose               run verbosely
+    -h, --help                       prints this help
+
+  Available Commands:
+      create : a new save using the provided data
+       fetch : an existing save by its identifier
+```
 
 ## Development
 
@@ -32,8 +40,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/saves-cli.
-
+Bug reports and pull requests are welcome on GitHub at [https://github.com/wanelo/saves-cli](https://github.com/wanelo/saves-cli)
 
 ## License
 
