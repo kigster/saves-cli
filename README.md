@@ -18,19 +18,48 @@ Or install it yourself as:
 
     $ cd ~/workspace
     $ git clone git@github.com:wanelo/saves-cli.git
+    $ cd saves-cli && bundle && bundle exec rake install
 
 ## Usage
 
-```
+```bash
+❯ saves-cli --help
 Usage: saves-cli [options] [command [options]]
 
     -v, --[no-]verbose               run verbosely
     -h, --help                       prints this help
 
-  Available Commands:
+Available Commands:
+
       create : a new save using the provided data
        fetch : an existing save by its identifier
 ```
+
+### Subcommands
+
+#### Create
+
+```bash
+❯ saves-cli create --help
+Usage: saves-cli create [options]
+    -b, --base-url URL               saves service base URL
+                                     defaults to http://localhost:3001
+    -u, --user USER                  user ID
+    -p, --product PRODUCT            product ID
+    -c, --collection COLLECTION      collection ID
+    -h, --help                       prints this help
+```
+
+#### Fetch
+
+```bash
+❯ saves-cli fetch --help
+Usage: saves-cli fetch [options]
+    -b, --base-url URL               saves service base URL
+                                     defaults to http://localhost:3001
+    -s, --save SAVE                  three-part save, eg. 'f3-32r-e3'
+    -h, --help                       prints this help
+```    
 
 ## Development
 
