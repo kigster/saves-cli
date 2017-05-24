@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+lib_path = File.dirname(__FILE__) + '/../lib'
+if File.exist?(lib_path)
+  $LOAD_PATH << lib_path
+end
+
+require 'saves/cli'
+
+require 'pp'
+app = Saves::CLI::App.new(ARGV)
+
+app.parse!
+
+puts app.out
+
+
+
+
