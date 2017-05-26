@@ -26,6 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hashie'
 
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'guard'
+  spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'rspec-its'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

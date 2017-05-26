@@ -10,8 +10,6 @@ module Saves
       end
 
     end
-
-    self.logger = ::Logger.new(STDOUT)
   end
 end
 

@@ -5,7 +5,7 @@ SimpleCov.start
 require 'bundler/setup'
 require 'saves/cli'
 
-Saves::CLI.logger = nil
+#Saves::CLI.logger = nil
 
 require 'rspec'
 require 'rspec/its'
@@ -17,6 +17,5 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
 end
-
-

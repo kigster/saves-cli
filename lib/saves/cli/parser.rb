@@ -10,10 +10,8 @@ module Saves
     class Parser < OptionParser
 
       @options = Hashie::Mash.new
-      @output  = Array.new
-
       class << self
-        attr_accessor :options, :output
+        attr_accessor :options, :stdout_array
 
         def global
           @global ||= ::Saves::CLI::Parser.new do |parser|
@@ -39,6 +37,7 @@ module Saves
                 parser.option_url
                 parser.option_user_product_collection
                 parser.option_help
+                parser.sep
               end
             },
 
@@ -48,7 +47,19 @@ module Saves
                 parser.banner = usage_line 'fetch'
                 parser.option_url
                 parser.option_save
+                parser.option_user_product_collection
                 parser.option_help
+                parser.sep
+              end,
+            },
+
+            id:  {
+              description: 'generate a save ID from three constituences',
+              parser:      ::Saves::CLI::Parser.new do |parser|
+                parser.banner = usage_line 'id'
+                parser.option_user_product_collection
+                parser.option_help
+                parser.sep
               end,
             }
           }
@@ -80,6 +91,7 @@ module Saves
       end
 
       def option_help(commands: false)
+        sep
         on('-h', '--help', 'prints this help') do
           output_help
           output_command_help if commands
@@ -87,6 +99,8 @@ module Saves
       end
 
       def option_user_product_collection
+        sep
+        sep 'All there are required to create a save or generate an ID'
         on('-uUSER', '--user USER', 'user ID') {|v| options[:user_id] = v}
         on('-pPRODUCT', '--product PRODUCT', 'product ID') {|v| options[:product_id] = v}
         on('-cCOLLECTION', '--collection COLLECTION', 'collection ID') {|v| options[:collection_id] = v}
@@ -118,7 +132,7 @@ module Saves
         end
 
         subtext << <<-EOS
-        
+
   See #{'saves-cli '.bold.blue + '<command> '.bold.green + '--help'.bold.yellow} for more information on a specific command.
 
         EOS
@@ -127,8 +141,8 @@ module Saves
       end
 
       def output(value = nil)
-        self.class.output << value if value
-        self.class.output
+        self.class.stdout_array << value if value
+        self.class.stdout_array
       end
 
     end

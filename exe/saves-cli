@@ -6,14 +6,10 @@ if File.exist?(lib_path)
 end
 
 require 'saves/cli'
+require 'saves/cli/client'
 
 require 'pp'
 app = Saves::CLI::App.new(ARGV)
-
 app.parse!
 
-puts app.out
-
-
-
-
+puts Saves::CLI::Client.exec(app)
