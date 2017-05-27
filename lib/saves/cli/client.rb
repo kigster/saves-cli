@@ -11,7 +11,7 @@ module Saves
       include SavesClient
 
       DEFAULT_BASE_URL    = 'http://localhost:3001'
-      self.saves_base_url = DEFAULT_BASE_URL
+      self.saves_base_url = DEFAULT_BASE_URL unless self.saves_base_url
 
       class << self
         def exec(app)

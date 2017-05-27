@@ -17,7 +17,6 @@ module Saves
           @global ||= ::Saves::CLI::Parser.new do |parser|
             parser.banner = usage_line
             parser.sep
-            parser.on('-v', '--[no-]verbose', 'run verbosely') {|v| Saves::CLI::Parser.options[:verbose] = true }
             parser.option_help(commands: true)
           end
         end
@@ -101,9 +100,15 @@ module Saves
       end
 
       def option_help(commands: false)
+        on('-v', '--verbose', 'run verbosely') do |v|
+          Saves::CLI::Parser.options[:verbose] = true
+        end
+        on('-V', '--version', 'prints version') do
+          output Saves::CLI::VERSION
+        end
         on('-h', '--help', 'prints this help') do
-          output_help
-          output_command_help if commands
+          output self.to_s
+          output command_help if commands
         end
       end
 
@@ -117,14 +122,6 @@ module Saves
 
       def option_help_with_subtext
         option_help
-      end
-
-      def output_help
-        output self.to_s
-      end
-
-      def output_command_help
-        output command_help
       end
 
       def options

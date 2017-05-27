@@ -15,13 +15,12 @@ module Saves
 
       def exec
         client.saves_base_url = self[:saves_base_url] if self[:saves_base_url]
-
         if self[:verbose]
-          log("SavesService Location: #{self.saves_base_url}")
+          log("SavesService Location: #{client.saves_base_url}")
           log("calling operation #{app.command.to_s.bold.blue} with #{options.to_h.inspect.bold.green}")
         end
         result = call_service(app)
-        log("return result is #{result.attributes.inspect.bold.green}") if self[:verbose]
+        log("return result is #{result.inspect.bold.green}") if self[:verbose]
         output_result result
       rescue SavesClient::HTTPError => e
         printf "Error executing command #{app.command.to_s.bold.yellow}:\n"
