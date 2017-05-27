@@ -8,6 +8,4 @@ end
 require 'saves/cli'
 require 'saves/cli/client'
 
-require 'pp'
-
 Saves::CLI::App.new(ARGV).parse!.run!

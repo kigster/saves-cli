@@ -81,7 +81,7 @@ module Saves
           block.call
 
         rescue Saves::CLI::InvalidCommandError => e
-          self.class.stderr_array << e.message.capitalize.bold.red
+          self.class.stderr_array << e.message.bold.red
           logger.error(e.message)
 
         rescue OptionParser::ParseError => e

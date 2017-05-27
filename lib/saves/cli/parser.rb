@@ -79,7 +79,7 @@ module Saves
           if commands[cmd]
             commands[cmd][:parser]
           else
-            raise(InvalidCommandError, "'#{cmd}' is not a valid command.\nSupported commands are:\n\t#{commands.keys.join("\n\t")}")
+            raise(InvalidCommandError, "Entry '#{cmd}' is not a valid command.\n\n" + "Supported commands are:\n\n\t#{commands.keys.join("\n\t").bold.green}\n")
           end
         end
       end

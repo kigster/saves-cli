@@ -23,3 +23,4 @@ _yardoc
 lib/bundler/man
 rdoc
 tmp
+.key

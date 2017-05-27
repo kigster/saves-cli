@@ -5,6 +5,7 @@ rvm:
 before_install: 
   - gem install bundler -v 1.14.6
   - gem install sym
-  - sym -k SAVES_CLIENT_ENCRYPTION_KEY -n vendor/saves_client-3.2.1.gem.enc
+  - gunzip vendor/*.gz
+  - sym -k SAVES_CLIENT_ENCRYPTION_KEY -n vendor/saves_client*.enc
   - gem install -f vendor/saves_client*.gem
 
