@@ -4,7 +4,7 @@ require 'saves/cli/app'
 RSpec.describe Saves::CLI::App do
 
   before do
-    allow(app).to receive(:print_output)
+    allow(app).to receive(:flush)
   end
 
   let(:argv_cli) {[]}
@@ -26,7 +26,7 @@ RSpec.describe Saves::CLI::App do
     let(:argv_cli) {%w(create --help) }
     before { app.parse! }
     its(:command) { should eq(:create) }
-    its(:out) { should match /Usage/ }
+    it(:output) { expect(subject.class.stdout_array.join).to match /Usage/ }
   end
 
 end

@@ -17,7 +17,7 @@ module Saves
           @global ||= ::Saves::CLI::Parser.new do |parser|
             parser.banner = usage_line
             parser.sep
-            parser.on('-v', '--[no-]verbose', 'run verbosely') {|v| options[:verbose] = v}
+            parser.on('-v', '--[no-]verbose', 'run verbosely') {|v| Saves::CLI::Parser.options[:verbose] = true }
             parser.option_help(commands: true)
           end
         end
@@ -53,11 +53,21 @@ module Saves
               end,
             },
 
-            id:  {
-              description: 'generate a save ID from three constituences',
+            encode:  {
+              description: 'generate a base62 save ID from three constituencies',
               parser:      ::Saves::CLI::Parser.new do |parser|
-                parser.banner = usage_line 'id'
+                parser.banner = usage_line 'encode'
                 parser.option_user_product_collection
+                parser.option_help
+                parser.sep
+              end,
+            },
+
+            decode:  {
+              description: 'decode base62-encoded save ID',
+              parser:      ::Saves::CLI::Parser.new do |parser|
+                parser.banner = usage_line 'decode'
+                parser.option_save
                 parser.option_help
                 parser.sep
               end,
@@ -83,15 +93,14 @@ module Saves
       end
 
       def option_save
-        on('-sSAVE', '--save SAVE', "three-part save, eg. 'f3-32r-e3'") {|v| options[:save] = v}
+        on('-sSAVE', '--save SAVE', "three-part save, eg. 'f3-32r-e3'") {|v| Saves::CLI::Parser.options[:save] = v}
       end
 
       def option_url
-        on('-bURL', '--base-url URL', 'saves service base URL', 'defaults to ' + Client::DEFAULT_BASE_URL) {|v| options[:saves_base_url] = v}
+        on('-bURL', '--base-url URL', 'saves service base URL', 'defaults to ' + Client::DEFAULT_BASE_URL) {|v| Saves::CLI::Parser.options[:saves_base_url] = v}
       end
 
       def option_help(commands: false)
-        sep
         on('-h', '--help', 'prints this help') do
           output_help
           output_command_help if commands
@@ -100,10 +109,10 @@ module Saves
 
       def option_user_product_collection
         sep
-        sep 'All there are required to create a save or generate an ID'
-        on('-uUSER', '--user USER', 'user ID') {|v| options[:user_id] = v}
-        on('-pPRODUCT', '--product PRODUCT', 'product ID') {|v| options[:product_id] = v}
-        on('-cCOLLECTION', '--collection COLLECTION', 'collection ID') {|v| options[:collection_id] = v}
+        sep 'All three are required to create a save or generate an ID'
+        on('-uUSER', '--user USER', 'user ID') {|v| Saves::CLI::Parser.options[:user_id] = v}
+        on('-pPRODUCT', '--product PRODUCT', 'product ID') {|v| Saves::CLI::Parser.options[:product_id] = v}
+        on('-cCOLLECTION', '--collection COLLECTION', 'collection ID') {|v| Saves::CLI::Parser.options[:collection_id] = v}
       end
 
       def option_help_with_subtext

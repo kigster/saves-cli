@@ -1,6 +1,10 @@
+[![Build Status](https://travis-ci.org/kigster/saves-cli.svg?branch=master)](https://travis-ci.org/kigster/saves-cli)
+
 # Saves CLI
 
 Saves CLI client, able to create, fetch, delete, find saves across sharded dataset.
+
+> NOTE: Saves Client gem is a dependency, and is a private gem.
 
 ## Installation
 

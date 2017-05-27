@@ -2,6 +2,8 @@ require 'colored2'
 require 'optparse'
 require 'hashie/mash'
 require 'saves/cli/parser'
+require 'saves/cli/client'
+require 'pp'
 
 module Saves
   module CLI
@@ -11,11 +13,9 @@ module Saves
       end
 
       # Lines/blocks of text
-      self.stdout_array = []
-      self.stderr_array = []
-
-      self.parser              = ::Saves::CLI::Parser
-      self.parser.stdout_array = self.stdout_array
+      self.stdout_array = Array.new
+      self.stderr_array = Array.new
+      self.parser       = ::Saves::CLI::Parser.tap { |parser| parser.stdout_array = self.stdout_array }
 
       attr_accessor :argv, :stdin, :stdout, :stderr, :kernel
       attr_accessor :command, :options
@@ -35,61 +35,35 @@ module Saves
         self.options = parser.options
       end
 
-      def parse!
-        if argv.first =~ /^[a-zA-Z]+/
-          cmd = self.argv.shift.to_sym
-          parse_options {
-            Parser.parser_for(cmd).parse!(argv)
-            self.command = cmd # did not raise exception, so valid command.
-            if argv && !argv.empty?
-              Parser.global.parse!(argv)
-            end
-          }
-        else
-          parse_options {parser.global.parse!(argv)}
-        end
 
-        process_options!
-        print_output
-      end
-
-      def process_options!
+      def run!
         Saves::CLI.logger = ::Logger.new(STDOUT) if options[:verbose]
-      end
 
-      def print_output
-        print_if_have_contents(self.stderr, self.class.stderr_array) || print_if_have_contents(self.stdout, self.class.stdout_array)
-      end
-
-      def out
-        self.class.stdout_array.join("\n")
-      end
-
-      def print_if_have_contents(stream, array)
-        unless array.empty?
-          stream.printf array.join("\n") + "\n\n"
-          true
+        if command
+          Saves::CLI::Client.exec(self)
         else
-          false
+          flush
         end
       end
 
-      def parse_options(&block)
-        begin
-          block.call
-        rescue Saves::CLI::InvalidCommandError => e
-          self.class.stderr_array << e.message.capitalize.bold.red
-          logger.error(e.message)
-        rescue OptionParser::ParseError => e
-          if e.message =~ /:/
-            title, option = e.message.split(/:/)
-            str           ="Oh vey, #{title.capitalize}".bold.yellow + ': ' + option.bold.red
-            self.class.stderr_array << str
-          else
-            self.class.stderr_array << e.message.bold.red
-          end
-          logger.error(e.message)
+
+      def parse!
+        global_argv = []
+        while argv && !argv.empty? && argv.first.start_with?('-') do
+          global_argv << argv.shift
         end
+
+        parse_options { parser.global.parse!(global_argv) }
+
+        if argv && !argv.empty? && !argv.first.start_with?('-')
+          cmd = argv.shift.to_sym
+          parse_options do
+            parser.parser_for(cmd).parse!(argv)
+            flush || self.command = cmd # did not raise exception, so valid command.
+          end
+        end
+
+        self
       end
 
       def parser
@@ -102,6 +76,41 @@ module Saves
         Saves::CLI.logger || Hashie::Mash.new
       end
 
+      def parse_options(&block)
+        begin
+          block.call
+
+        rescue Saves::CLI::InvalidCommandError => e
+          self.class.stderr_array << e.message.capitalize.bold.red
+          logger.error(e.message)
+
+        rescue OptionParser::ParseError => e
+          if e.message =~ /:/
+            title, option = e.message.split(/:/)
+            str           ="Oh vey, #{title.capitalize}".bold.yellow + ': ' + option.bold.red
+            self.class.stderr_array << str
+          else
+            self.class.stderr_array << e.message.bold.red
+          end
+
+          logger.error(e.message)
+        end
+      end
+
+      def print_if_have_contents(stream, array)
+        if array.empty?
+          false
+        else
+          stream.printf array.join("\n") + "\n"
+          array.clear
+          true
+        end
+      end
+
+
+      def flush
+        print_if_have_contents(self.stderr, self.class.stderr_array) || print_if_have_contents(self.stdout, self.class.stdout_array)
+      end
 
     end
   end

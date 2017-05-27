@@ -1,5 +1,6 @@
 require 'saves_client'
 require 'saves_client/models/fake_save'
+require 'oj'
 
 module Saves
   module CLI
@@ -17,8 +18,19 @@ module Saves
           self.send(app.command, app.options.merge(created_at: Time.now))
         end
 
-        def id(options)
-          print SavesClient::Models::FakeSave.new(options).composite_id
+        def encode(options)
+          output_json 'save': SavesClient::Models::FakeSave.new(options).composite_id
+        end
+
+        def decode(options)
+          output_json SavesClient::Models::FakeSave.decode_composite_id(options[:save])
+        end
+
+        private
+
+        def output_json(hash)
+          str = Oj.dump(hash.stringify_keys, {})
+          system("echo '#{str}' | jq")
         end
       end
     end

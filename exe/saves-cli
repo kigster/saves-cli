@@ -9,7 +9,5 @@ require 'saves/cli'
 require 'saves/cli/client'
 
 require 'pp'
-app = Saves::CLI::App.new(ARGV)
-app.parse!
 
-puts Saves::CLI::Client.exec(app)
+Saves::CLI::App.new(ARGV).parse!.run!

@@ -24,6 +24,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'saves_client'
   spec.add_dependency 'colored2'
   spec.add_dependency 'hashie'
+  spec.add_dependency 'oj'
+
 
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'guard'
