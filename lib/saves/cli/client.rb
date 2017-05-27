@@ -1,6 +1,8 @@
 require 'saves_client'
 require 'saves_client/models/fake_save'
 require 'oj'
+require 'awesome_print'
+require 'colored2'
 
 module Saves
   module CLI
@@ -15,7 +17,11 @@ module Saves
 
         def exec(app)
           self.saves_base_url = app.options[:saves_base_url] if app.options[:saves_base_url]
-          self.send(app.command, app.options.merge(created_at: Time.now))
+          output_json self.send(app.command, app.options.merge(created_at: Time.now))
+        rescue SavesClient::HTTPError => e
+          printf "Error executing command #{app.command.to_s.bold.yellow}:\n"
+          printf " → ".red + e.message.gsub(/encountered a /, "encountered a\n → ").bold.italic.red
+          puts
         end
 
         def encode(options)
@@ -29,8 +35,14 @@ module Saves
         private
 
         def output_json(hash)
-          str = Oj.dump(hash.stringify_keys, {})
-          system("echo '#{str}' | jq")
+          return unless hash.is_a?(Hash)
+          hash.stringify_keys!
+          if `which jq`.empty?
+            ap hash
+          else
+            str = Oj.dump(hash, {})
+            system("echo '#{str}' | jq")
+          end
         end
       end
     end
