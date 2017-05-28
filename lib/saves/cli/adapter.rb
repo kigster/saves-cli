@@ -68,7 +68,7 @@ module Saves
         result = result.to_hash if result.respond_to?(:to_hash)
         case result
           when String
-            puts result.bold.yellow
+            puts result
           when Hash
             if result[:error]
               puts 'Error occured: '.bold.red
