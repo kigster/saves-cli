@@ -129,12 +129,9 @@ module Saves
       end
 
       def command_help
-        subtext = "  Available Commands:\n"
-
+        subtext = "  Available Commands:\n\n"
         self.class.commands.each_pair do |command, config|
-          subtext << <<-EOS
-#{sprintf('%12s', command.to_s).bold.green} : #{sprintf('%-70s', config[:description]).bold.yellow}
-          EOS
+          subtext << "#{sprintf('%12s', command.to_s).bold.green} : #{sprintf('%-50s', config[:description]).bold.yellow}\n"
         end
 
         subtext << <<-EOS
