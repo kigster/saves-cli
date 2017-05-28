@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 unless ENV['SAVES_CLIENT_ENCRYPTION_KEY']
-  #gem 'saves_client', git: 'git@github.com:wanelo/saves-client.git', branch: 'ruby-2.4'
-  gem 'saves_client', path: '../saves-client'
+  gem 'saves_client', git: 'git@github.com:wanelo/saves-client.git', branch: 'ruby-2.4'
 end
 
